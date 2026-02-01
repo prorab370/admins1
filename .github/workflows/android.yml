@@ -2,8 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -25,17 +24,14 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Install system dependencies
+      - name: Install system packages
         run: |
           sudo apt update
           sudo apt install -y \
-            zip unzip tar \
-            git \
-            autoconf automake libtool \
-            pkg-config \
-            zlib1g-dev \
-            libncurses5-dev \
-            libncursesw5-dev \
+            zip unzip \
+            build-essential \
+            libncurses5 \
+            libstdc++6 \
             libtinfo5 \
             cmake
 
@@ -49,14 +45,14 @@ jobs:
           ANDROID_HOME: /home/runner/android-sdk
           ANDROID_SDK_ROOT: /home/runner/android-sdk
         run: |
-          mkdir -p $ANDROID_HOME
+          mkdir -p $ANDROID_HOME/cmdline-tools
           cd $ANDROID_HOME
 
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip commandlinetools-linux-11076708_latest.zip
+          unzip commandlinetools-linux-11076708_latest.zip -d cmdline-tools
 
           mkdir -p cmdline-tools/latest
-          mv cmdline-tools/* cmdline-tools/latest/
+          mv cmdline-tools/cmdline-tools/* cmdline-tools/latest/
 
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
 
